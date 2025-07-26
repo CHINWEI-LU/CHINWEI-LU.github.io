@@ -7059,7 +7059,7 @@ div.timenode:hover .meta:after {
 }
 .highlight pre .line,
 .highlight pre .params {
-  color: rgba(68,68,68,0.9);
+  color: #ccc;
 }
 .highlight pre .line .addition {
   color: #3fa33f;
@@ -7213,6 +7213,21 @@ div.timenode:hover .meta:after {
 }
 .highlight.yaml .line .attr {
   color: #e24f5a;
+}
+.highlight.python .line .keyword {
+  color: #9c27b0;
+}
+.highlight.python .line .string {
+  color: #fb3f1b;
+}
+.highlight.python .line .comment {
+  color: #6c737a;
+}
+.highlight.python .line .function {
+  color: #69c;
+}
+.highlight.python .line .number {
+  color: #ffc66d;
 }
 pre {
   position: relative;
@@ -7464,7 +7479,7 @@ pre {
   }
   :root:not([color-scheme]) .highlight pre .line,
   :root:not([color-scheme]) .highlight pre .params {
-    color: rgba(158,142,142,0.9);
+    color: rgba(212,204,204,0.9);
   }
   :root:not([color-scheme]) *:not(.highlight) >table tr {
     background-color: var(--color-card);
@@ -7552,7 +7567,7 @@ pre {
 }
 [color-scheme='dark'] .highlight pre .line,
 [color-scheme='dark'] .highlight pre .params {
-  color: rgba(158,142,142,0.9);
+  color: rgba(212,204,204,0.9);
 }
 [color-scheme='dark'] *:not(.highlight) >table tr {
   background-color: var(--color-card);
