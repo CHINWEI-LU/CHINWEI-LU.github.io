@@ -34,20 +34,20 @@
   <!-- feed -->
   <!-- 页面元数据 -->
   <title>MambaStock 程式解析 - 個人部落格</title>
-  <meta name="keywords" content="Mamba, Stock prediction,IT技術, Python, Django">
+  <meta name="keywords" content="Mamba, Stock prediction, MambaStock,IT技術, Python, Django">
   <meta desc name="description" content="CHINWEI-LU 的個人部落格 - CHINWEI-LU - 個人部落格">
   
 <meta property="og:type" content="article">
 <meta property="og:title" content="MambaStock 程式解析">
 <meta property="og:url" content="https://chinwei-lu.github.io/2025/07/25/MambaStock-%E7%A8%8B%E5%BC%8F%E8%A7%A3%E6%9E%90/index.html">
 <meta property="og:site_name" content="個人部落格">
-<meta property="og:description" content="我們的專案想用 Mamba 模型預測股價。這篇文章，我們研究 MambaStock 這篇文章的程式碼。 mamba.pyMambaConfig參數結構 12345678910111213141516171819202122232425@dataclassclass MambaConfig:    d_model: int # D    n_layers: int    dt_rank: Union">
+<meta property="og:description" content="我們的專案想用 Mamba 模型預測股價。這篇文章，我們研究 MambaStock 這篇文章的程式碼。 結構簡介這個專案主要分為三個 .py 程式，分別為  mamba.py pscan.py main.py  我們將依序分析每個 .py 程式以及彼此的關聯。 資料預覽我們預覽一下作者提供的 600036.SH.csv 資料    ts_code trade_date open high low">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png">
 <meta property="article:published_time" content="2025-07-25T05:23:26.000Z">
-<meta property="article:modified_time" content="2025-07-25T05:38:01.279Z">
+<meta property="article:modified_time" content="2025-07-26T06:01:16.266Z">
 <meta property="article:author" content="CHINWEI-LU">
-<meta property="article:tag" content="Mamba, Stock prediction">
+<meta property="article:tag" content="Mamba, Stock prediction, MambaStock">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png">
   <style>
@@ -716,6 +716,163 @@ button {
   -webkit-opacity: 1;
   -moz-opacity: 1;
   border-bottom: 2px solid var(--color-site-inner);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-mode: 'dark';
+  }
+  :root:not([color-scheme]) {
+    --color-site-body: #121212;
+    --color-read-bkg: #1f1f1f;
+    --color-read-post: #262626;
+    --color-site-bg: #1f1f1f;
+    --color-site-inner: rgba(238,238,238,0.871);
+    --color-site-footer: rgba(170,170,170,0.871);
+    --color-card: #262626;
+    --color-text: rgba(238,238,238,0.871);
+    --color-block: #434343;
+    --color-codeblock: #1f1f1f;
+    --color-inlinecode: #d56d28;
+    --color-h1: rgba(255,255,255,0.871);
+    --color-h2: rgba(255,255,255,0.871);
+    --color-h3: rgba(255,255,255,0.6);
+    --color-h4: rgba(255,255,255,0.6);
+    --color-h5: rgba(255,255,255,0.6);
+    --color-h6: rgba(255,255,255,0.6);
+    --color-p: rgba(217,217,217,0.871);
+    --color-list: rgba(217,217,217,0.871);
+    --color-list-hl: #63e0c4;
+    --color-meta: rgba(191,191,191,0.871);
+    --color-link: rgba(191,191,191,0.871);
+    --color-copyright-bkg: #21252b;
+    --link-color: #e4e4e4;
+  }
+  :root:not([color-scheme]) img {
+    filter: brightness(70%) !important;
+  }
+  :root:not([color-scheme]) .blur {
+    background: rgba(31,31,31,0.9) !important;
+  }
+  :root:not([color-scheme]) .white-box.blur {
+    background: rgba(38,38,38,0.9) !important;
+  }
+  :root:not([color-scheme]) .nav-main .u-search-input {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a:hover {
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) .article blockquote {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) .article-title a {
+    color: var(--color-h1) !important;
+  }
+  :root:not([color-scheme]) details>summary {
+    color: var(--color-p) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) details {
+    border: 1px solid var(--color-site-bg) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal,
+  :root:not([color-scheme]) #u-search .modal-header,
+  :root:not([color-scheme]) #u-search .modal-body {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal-body .modal-results .result:hover {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) .u-search-input:hover {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) .u-search-input:focus {
+    background: var(--color-site-body) !important;
+  }
+}
+[color-scheme='dark'] {
+  --color-site-body: #121212;
+  --color-read-bkg: #1f1f1f;
+  --color-read-post: #262626;
+  --color-site-bg: #1f1f1f;
+  --color-site-inner: rgba(238,238,238,0.871);
+  --color-site-footer: rgba(170,170,170,0.871);
+  --color-card: #262626;
+  --color-text: rgba(238,238,238,0.871);
+  --color-block: #434343;
+  --color-codeblock: #1f1f1f;
+  --color-inlinecode: #d56d28;
+  --color-h1: rgba(255,255,255,0.871);
+  --color-h2: rgba(255,255,255,0.871);
+  --color-h3: rgba(255,255,255,0.6);
+  --color-h4: rgba(255,255,255,0.6);
+  --color-h5: rgba(255,255,255,0.6);
+  --color-h6: rgba(255,255,255,0.6);
+  --color-p: rgba(217,217,217,0.871);
+  --color-list: rgba(217,217,217,0.871);
+  --color-list-hl: #63e0c4;
+  --color-meta: rgba(191,191,191,0.871);
+  --color-link: rgba(191,191,191,0.871);
+  --color-copyright-bkg: #21252b;
+  --link-color: #e4e4e4;
+}
+[color-scheme='dark'] img {
+  filter: brightness(70%) !important;
+}
+[color-scheme='dark'] .blur {
+  background: rgba(31,31,31,0.9) !important;
+}
+[color-scheme='dark'] .white-box.blur {
+  background: rgba(38,38,38,0.9) !important;
+}
+[color-scheme='dark'] .nav-main .u-search-input {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a:hover {
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] .article blockquote {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] .article-title a {
+  color: var(--color-h1) !important;
+}
+[color-scheme='dark'] details>summary {
+  color: var(--color-p) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] details {
+  border: 1px solid var(--color-site-bg) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] #u-search .modal,
+[color-scheme='dark'] #u-search .modal-header,
+[color-scheme='dark'] #u-search .modal-body {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #u-search .modal-body .modal-results .result:hover {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] .u-search-input:hover {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] .u-search-input:focus {
+  background: var(--color-site-body) !important;
+}
+@media screen and (max-width: 500px) {
+  [color-scheme='dark'] .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
+[color-scheme='dark'] .friend-card.color-bk-dark {
+  filter: brightness(0.8);
 }
 @font-face {
   font-family: 'UbuntuMono';
@@ -1553,10 +1710,21 @@ ul.list-v >li>a:hover {
     padding: 0px;
   }
 }
+@media screen and (prefers-color-scheme: dark) and (max-width: 500px) {
+  .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
 
   </style>
   <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
   <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+    <script>
+      let userColorScheme=localStorage.getItem("color-scheme")
+      if(userColorScheme){
+        document.documentElement.setAttribute("color-scheme", userColorScheme);
+      }
+    </script>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -1997,7 +2165,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     root: '/',
     debug: "env",
     default: {"avatar":"https://unpkg.com/volantis-static@0.0.1660614606622/media/placeholder/avatar/round/3442075.svg","link":"https://unpkg.com/volantis-static@0.0.1660614606622/media/placeholder/link/8f277b4ee0ecd.svg","cover":"https://unpkg.com/volantis-static@0.0.1660614606622/media/placeholder/cover/76b86c0226ffd.svg","image":"https://unpkg.com/volantis-static@0.0.1660614606622/media/placeholder/image/2659360.svg"},
-    lastupdate: new Date(1753431627768),
+    lastupdate: new Date(1753510426063),
     cdn: {
       izitoast_css: 'https://unpkg.com/izitoast@1.4.0/dist/css/iziToast.min.css',
       izitoast_js: 'https://unpkg.com/izitoast@1.4.0/dist/js/iziToast.min.js',
@@ -2047,6 +2215,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <!-- Custom Files headEnd begin-->
   
   <!-- Custom Files headEnd end-->
+  <script src="/js/head.js"></script>
 </head>
   <body itemscope itemtype="https://schema.org.cn/WebPage">
     <!-- import body_begin begin-->
@@ -2071,7 +2240,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         
         <a class="title flat-box" target="_self" href='/'>
           
-            <img no-lazy class='logo' src='https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/Logo-NavBar@3x.png'/>
+            <img no-lazy class='logo' src='/img/20250416122213.png'/>
           
           
           
@@ -2378,10 +2547,115 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <div id="layoutHelper-page-plugins"></div>
   <div id="post-body" itemprop="articleBody">
     <p>我們的專案想用 Mamba 模型預測股價。<br>這篇文章，我們研究 <a target="_blank" rel="noopener" href="https://github.com/zshicode/MambaStock">MambaStock</a> 這篇文章的程式碼。</p>
-<h1 id="mamba-py"><a href="#mamba-py" class="headerlink" title="mamba.py"></a><code>mamba.py</code></h1><h2 id="MambaConfig"><a href="#MambaConfig" class="headerlink" title="MambaConfig"></a><code>MambaConfig</code></h2><p>參數結構</p>
+<h2 id="結構簡介"><a href="#結構簡介" class="headerlink" title="結構簡介"></a>結構簡介</h2><p>這個專案主要分為三個 <code>.py</code> 程式，分別為</p>
+<ul>
+<li><code>mamba.py</code></li>
+<li><code>pscan.py</code></li>
+<li><code>main.py</code></li>
+</ul>
+<p>我們將依序分析每個 <code>.py</code> 程式以及彼此的關聯。</p>
+<h2 id="資料預覽"><a href="#資料預覽" class="headerlink" title="資料預覽"></a>資料預覽</h2><p>我們預覽一下作者提供的 <code>600036.SH.csv</code> 資料</p>
+<table>
+<thead>
+<tr>
+<th>ts_code</th>
+<th>trade_date</th>
+<th>open</th>
+<th>high</th>
+<th>low</th>
+<th>close</th>
+<th>pre_close</th>
+<th>change</th>
+<th>pct_chg</th>
+<th>vol</th>
+<th>amount</th>
+<th>turnover_rate</th>
+<th>volume_ratio</th>
+<th>pe</th>
+<th>pb</th>
+<th>ps</th>
+<th>total_share</th>
+<th>float_share</th>
+<th>free_share</th>
+<th>total_mv</th>
+<th>circ_mv</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>600036.SH</td>
+<td>20070104</td>
+<td>16.99</td>
+<td>17.8</td>
+<td>15.5</td>
+<td>15.96</td>
+<td>16.36</td>
+<td>-0.4</td>
+<td>-2.45</td>
+<td>1534457.98</td>
+<td>2581634.899</td>
+<td>3.2586</td>
+<td>2.12</td>
+<td>61.9654</td>
+<td>4.6105</td>
+<td>12.2352</td>
+<td>1470256.243</td>
+<td>470893.2851</td>
+<td>470893.2851</td>
+<td>23465289.6383</td>
+<td>7515456.8302</td>
+</tr>
+<tr>
+<td>600036.SH</td>
+<td>20070105</td>
+<td>15.76</td>
+<td>15.76</td>
+<td>15.0</td>
+<td>15.24</td>
+<td>15.96</td>
+<td>-0.72</td>
+<td>-4.51</td>
+<td>1127980.4</td>
+<td>1734505.519</td>
+<td>2.3954</td>
+<td>1.36</td>
+<td>59.1699</td>
+<td>4.4025</td>
+<td>11.6832</td>
+<td>1470256.243</td>
+<td>470893.2851</td>
+<td>470893.2851</td>
+<td>22406705.1433</td>
+<td>7176413.6649</td>
+</tr>
+<tr>
+<td>600036.SH</td>
+<td>20070108</td>
+<td>15.36</td>
+<td>16.2</td>
+<td>15.36</td>
+<td>16.0</td>
+<td>15.24</td>
+<td>0.76</td>
+<td>4.99</td>
+<td>961096.63</td>
+<td>1520354.778</td>
+<td>2.041</td>
+<td>1.03</td>
+<td>62.1207</td>
+<td>4.6221</td>
+<td>12.2658</td>
+<td>1470256.243</td>
+<td>470893.2851</td>
+<td>470893.2851</td>
+<td>23524099.888</td>
+<td>7534292.5616</td>
+</tr>
+</tbody></table>
+<h2 id="mamba-py"><a href="#mamba-py" class="headerlink" title="mamba.py"></a><code>mamba.py</code></h2><p><code>mamba.py</code> 定義了訓練過程的 class。</p>
+<h3 id="MambaConfig"><a href="#MambaConfig" class="headerlink" title="MambaConfig"></a><code>MambaConfig</code></h3><p>參數結構</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@dataclass</span><br><span class="line">class MambaConfig:</span><br><span class="line">    d_model: int # D</span><br><span class="line">    n_layers: int</span><br><span class="line">    dt_rank: Union[int, str] = &#x27;auto&#x27;</span><br><span class="line">    d_state: int = 16 # N in paper/comments</span><br><span class="line">    expand_factor: int = 2 # E in paper/comments</span><br><span class="line">    d_conv: int = 4</span><br><span class="line"></span><br><span class="line">    dt_min: float = 0.001</span><br><span class="line">    dt_max: float = 0.1</span><br><span class="line">    dt_init: str = &quot;random&quot; # &quot;random&quot; or &quot;constant&quot;</span><br><span class="line">    dt_scale: float = 1.0</span><br><span class="line">    dt_init_floor = 1e-4</span><br><span class="line"></span><br><span class="line">    bias: bool = False</span><br><span class="line">    conv_bias: bool = True</span><br><span class="line"></span><br><span class="line">    pscan: bool = True # use parallel scan mode or sequential mode when training</span><br><span class="line"></span><br><span class="line">    def __post_init__(self):</span><br><span class="line">        self.d_inner = self.expand_factor * self.d_model # E*D = ED in comments</span><br><span class="line"></span><br><span class="line">        if self.dt_rank == &#x27;auto&#x27;:</span><br><span class="line">            self.dt_rank = math.ceil(self.d_model / 16)</span><br></pre></td></tr></table></figure>
 
-<h2 id="Mamba"><a href="#Mamba" class="headerlink" title="Mamba"></a><code>Mamba</code></h2><p>主要的 <code>Mamba</code> 架構</p>
+<h3 id="Mamba"><a href="#Mamba" class="headerlink" title="Mamba"></a><code>Mamba</code></h3><p>主要的 <code>Mamba</code> 架構</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">class Mamba(nn.Module):</span><br><span class="line">    def __init__(self, config: MambaConfig):</span><br><span class="line">        super().__init__()</span><br><span class="line"></span><br><span class="line">        self.config = config</span><br><span class="line"></span><br><span class="line">        self.layers = nn.ModuleList([ResidualBlock(config) for _ in range(config.n_layers)])</span><br><span class="line">        self.norm_f = RMSNorm(config.d_model)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        # x : (B, L, D)</span><br><span class="line"></span><br><span class="line">        # y : (B, L, D)</span><br><span class="line"></span><br><span class="line">        for layer in self.layers:</span><br><span class="line">            x = layer(x)</span><br><span class="line"></span><br><span class="line">        x = self.norm_f(x)</span><br><span class="line"></span><br><span class="line">        return x</span><br><span class="line">    </span><br><span class="line">    def step(self, x, caches):</span><br><span class="line">        # x : (B, L, D)</span><br><span class="line">        # caches : [cache(layer) for all layers], cache : (h, inputs)</span><br><span class="line"></span><br><span class="line">        # y : (B, L, D)</span><br><span class="line">        # caches : [cache(layer) for all layers], cache : (h, inputs)</span><br><span class="line"></span><br><span class="line">        for i, layer in enumerate(self.layers):</span><br><span class="line">            x, caches[i] = layer.step(x, caches[i])</span><br><span class="line"></span><br><span class="line">        return x, caches</span><br></pre></td></tr></table></figure>
 <ul>
 <li>主要內容:<ul>
@@ -2399,17 +2673,59 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 </ul>
 </li>
 </ul>
-<h2 id="ResidualBlock"><a href="#ResidualBlock" class="headerlink" title="ResidualBlock"></a><code>ResidualBlock</code></h2><p>解釋 <code>ResidualBlock</code> 的細節</p>
+<h3 id="ResidualBlock"><a href="#ResidualBlock" class="headerlink" title="ResidualBlock"></a><code>ResidualBlock</code></h3><p>解釋 <code>ResidualBlock</code> 的細節</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class ResidualBlock(nn.Module):</span><br><span class="line">    def __init__(self, config: MambaConfig):</span><br><span class="line">        super().__init__()</span><br><span class="line"></span><br><span class="line">        self.mixer = MambaBlock(config)</span><br><span class="line">        self.norm = RMSNorm(config.d_model)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        # x : (B, L, D)</span><br><span class="line"></span><br><span class="line">        # output : (B, L, D)</span><br><span class="line"></span><br><span class="line">        output = self.mixer(self.norm(x)) + x</span><br><span class="line">        return output</span><br><span class="line">    </span><br><span class="line">    def step(self, x, cache):</span><br><span class="line">        # x : (B, D)</span><br><span class="line">        # cache : (h, inputs)</span><br><span class="line">                # h : (B, ED, N)</span><br><span class="line">                # inputs: (B, ED, d_conv-1)</span><br><span class="line"></span><br><span class="line">        # output : (B, D)</span><br><span class="line">        # cache : (h, inputs)</span><br><span class="line"></span><br><span class="line">        output, cache = self.mixer.step(self.norm(x), cache)</span><br><span class="line">        output = output + x</span><br><span class="line">        return output, cache</span><br></pre></td></tr></table></figure>
 
 
+<h2 id="main-py"><a href="#main-py" class="headerlink" title="main.py"></a><code>main.py</code></h2><p><code>main.py</code> 包含了超參數設定以及真實訓練過程。</p>
+<h3 id="參數"><a href="#參數" class="headerlink" title="參數"></a>參數</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(&#x27;--use-cuda&#x27;, default=False,</span><br><span class="line">                    help=&#x27;CUDA training.&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--seed&#x27;, type=int, default=1, help=&#x27;Random seed.&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--epochs&#x27;, type=int, default=100,</span><br><span class="line">                    help=&#x27;Number of epochs to train.&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--lr&#x27;, type=float, default=0.01,</span><br><span class="line">                    help=&#x27;Learning rate.&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--wd&#x27;, type=float, default=1e-5,</span><br><span class="line">                    help=&#x27;Weight decay (L2 loss on parameters).&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--hidden&#x27;, type=int, default=16,</span><br><span class="line">                    help=&#x27;Dimension of representations&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--layer&#x27;, type=int, default=2,</span><br><span class="line">                    help=&#x27;Num of layers&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--n-test&#x27;, type=int, default=300,</span><br><span class="line">                    help=&#x27;Size of test set&#x27;)</span><br><span class="line">parser.add_argument(&#x27;--ts-code&#x27;, type=str, default=&#x27;601988&#x27;,</span><br><span class="line">                    help=&#x27;Stock code&#x27;)                    </span><br><span class="line"></span><br><span class="line">args = parser.parse_args()</span><br><span class="line">args.cuda = args.use_cuda and torch.cuda.is_available()</span><br></pre></td></tr></table></figure>
 
+<h3 id="距離函數以及隨機數"><a href="#距離函數以及隨機數" class="headerlink" title="距離函數以及隨機數"></a>距離函數以及隨機數</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">def evaluation_metric(y_test,y_hat):</span><br><span class="line">    MSE = mean_squared_error(y_test, y_hat)</span><br><span class="line">    RMSE = MSE**0.5</span><br><span class="line">    MAE = mean_absolute_error(y_test,y_hat)</span><br><span class="line">    R2 = r2_score(y_test,y_hat)</span><br><span class="line">    print(&#x27;%.4f %.4f %.4f %.4f&#x27; % (MSE,RMSE,MAE,R2))</span><br><span class="line"></span><br><span class="line">def set_seed(seed,cuda):</span><br><span class="line">    np.random.seed(seed)</span><br><span class="line">    torch.manual_seed(seed)</span><br><span class="line">    if cuda:</span><br><span class="line">        torch.cuda.manual_seed(seed)</span><br><span class="line"></span><br><span class="line">def dateinf(series, n_test):</span><br><span class="line">    lt = len(series)</span><br><span class="line">    print(&#x27;Training start&#x27;,series[0])</span><br><span class="line">    print(&#x27;Training end&#x27;,series[lt-n_test-1])</span><br><span class="line">    print(&#x27;Testing start&#x27;,series[lt-n_test])</span><br><span class="line">    print(&#x27;Testing end&#x27;,series[lt-1])</span><br><span class="line"></span><br><span class="line">set_seed(args.seed,args.cuda)</span><br></pre></td></tr></table></figure>
 
+<h3 id="模型建構"><a href="#模型建構" class="headerlink" title="模型建構"></a>模型建構</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class Net(nn.Module):</span><br><span class="line">    def __init__(self,in_dim,out_dim):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = MambaConfig(d_model=args.hidden, n_layers=args.layer)</span><br><span class="line">        self.mamba = nn.Sequential(</span><br><span class="line">            nn.Linear(in_dim,args.hidden),</span><br><span class="line">            Mamba(self.config),</span><br><span class="line">            nn.Linear(args.hidden,out_dim),</span><br><span class="line">            nn.Tanh()</span><br><span class="line">        )</span><br><span class="line">    </span><br><span class="line">    def forward(self,x):</span><br><span class="line">        x = self.mamba(x)</span><br><span class="line">        return x.flatten()</span><br></pre></td></tr></table></figure>
 
+<h3 id="訓練參數"><a href="#訓練參數" class="headerlink" title="訓練參數"></a>訓練參數</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">def PredictWithData(trainX, trainy, testX):</span><br><span class="line">    clf = Net(len(trainX[0]),1)</span><br><span class="line">    opt = torch.optim.Adam(clf.parameters(),lr=args.lr,weight_decay=args.wd)</span><br><span class="line">    xt = torch.from_numpy(trainX).float().unsqueeze(0)</span><br><span class="line">    xv = torch.from_numpy(testX).float().unsqueeze(0)</span><br><span class="line">    yt = torch.from_numpy(trainy).float()</span><br><span class="line">    if args.cuda:</span><br><span class="line">        clf = clf.cuda()</span><br><span class="line">        xt = xt.cuda()</span><br><span class="line">        xv = xv.cuda()</span><br><span class="line">        yt = yt.cuda()</span><br><span class="line">    </span><br><span class="line">    for e in range(args.epochs):</span><br><span class="line">        clf.train()</span><br><span class="line">        z = clf(xt)</span><br><span class="line">        loss = F.mse_loss(z,yt)</span><br><span class="line">        opt.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        opt.step()</span><br><span class="line">        if e%10 == 0 and e!=0:</span><br><span class="line">            print(&#x27;Epoch %d | Lossp: %.4f&#x27; % (e, loss.item()))</span><br><span class="line"></span><br><span class="line">    clf.eval()</span><br><span class="line">    mat = clf(xv)</span><br><span class="line">    if args.cuda: mat = mat.cpu()</span><br><span class="line">    yhat = mat.detach().numpy().flatten()</span><br><span class="line">    return yhat</span><br></pre></td></tr></table></figure>
 
-
-
-
+<h3 id="資料前處理"><a href="#資料前處理" class="headerlink" title="資料前處理"></a>資料前處理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data = pd.read_csv(args.ts_code+&#x27;.SH.csv&#x27;)</span><br><span class="line">data[&#x27;trade_date&#x27;] = pd.to_datetime(data[&#x27;trade_date&#x27;], format=&#x27;%Y%m%d&#x27;)</span><br><span class="line">close = data.pop(&#x27;close&#x27;).values</span><br><span class="line">ratechg = data[&#x27;pct_chg&#x27;].apply(lambda x:0.01*x).values</span><br><span class="line">data.drop(columns=[&#x27;pre_close&#x27;,&#x27;change&#x27;,&#x27;pct_chg&#x27;],inplace=True)</span><br><span class="line">dat = data.iloc[:,2:].values</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>data = pd.read_csv(args.ts_code+&#39;.SH.csv&#39;)</code><br>輸入資料</p>
+</li>
+<li><p><code>data[&#39;trade_date&#39;] = pd.to_datetime(data[&#39;trade_date&#39;], format=&#39;%Y%m%d&#39;)</code><br>日期</p>
+</li>
+<li><p><code>close = data.pop(&#39;close&#39;).values</code><br>把 table 裡面要預測的目標 (<code>close</code> 每日收盤價的 column) 取出來 (原資料同時刪除該 column)，用變數 <code>close</code> 儲存</p>
+</li>
+<li><p><code>ratechg = data[&#39;pct_chg&#39;].apply(lambda x:0.01*x).values</code><br>資料裡面的投資報酬率 <code>pct_chg</code> 是百分比的資料 (e.g., 0.3%)，我們把投資報酬率的資料換回真實的值 (e.g., 0.3% -&gt; 0.003)，用 <code>ratechg</code> 這個變數存下來。</p>
+</li>
+<li><p><code>data.drop(columns=[&#39;pre_close&#39;,&#39;change&#39;,&#39;pct_chg&#39;],inplace=True)</code><br>作者去除認為無用的 column</p>
+</li>
+<li><p><code>dat = data.iloc[:,2:].values</code><br>前兩個 column 是 <code>ts_code</code> 和 <code>trade_date</code> 不用納入我們的資料。因此我們從第三個 (第二個如果從0開始數，也就是程式的寫法) 開始取資料，用變數 <code>dat</code> 儲存資料。</p>
+</li>
+</ul>
+<h3 id="訓練資料-測試資料"><a href="#訓練資料-測試資料" class="headerlink" title="訓練資料 &#x2F; 測試資料"></a>訓練資料 &#x2F; 測試資料</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">trainX, testX = dat[:-args.n_test, :], dat[-args.n_test:, :]</span><br><span class="line">trainy = ratechg[:-args.n_test]</span><br><span class="line">predictions = PredictWithData(trainX, trainy, testX)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>trainX, testX = dat[:-args.n_test, :], dat[-args.n_test:, :]</code><br><code>n_test</code> 的值代表要保留多少當作測試資料。<br>e.g., <code>n_test=100</code> 然後假如我們有 1000 筆資料 (1000天)，那 <code>trainX</code> 有前 900 筆資料，<code>testX</code> 有最後 100 筆資料。</p>
+</li>
+<li><p><code>trainy = ratechg[:-args.n_test]</code><br>對應的於訓練資料的 <code>y</code> (投資報酬率)</p>
+</li>
+<li><p><code>predictions = PredictWithData(trainX, trainy, testX)</code><br>將訓練資料 <code>trainX</code>、 <code>trainy</code> 以及測試資料 <code>testX</code> 作為 <code>PredictWithData()</code> 的輸入。</p>
+</li>
+</ul>
+<h3 id="訓練結果呈現"><a href="#訓練結果呈現" class="headerlink" title="訓練結果呈現"></a>訓練結果呈現</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">time = data[&#x27;trade_date&#x27;][-args.n_test:]</span><br><span class="line">data1 = close[-args.n_test:]</span><br><span class="line">finalpredicted_stock_price = []</span><br><span class="line">pred = close[-args.n_test-1]</span><br><span class="line">for i in range(args.n_test):</span><br><span class="line">    pred = close[-args.n_test-1+i]*(1+predictions[i])</span><br><span class="line">    finalpredicted_stock_price.append(pred)</span><br><span class="line"></span><br><span class="line">dateinf(data[&#x27;trade_date&#x27;],args.n_test)</span><br><span class="line">print(&#x27;MSE RMSE MAE R2&#x27;)</span><br><span class="line">evaluation_metric(data1, finalpredicted_stock_price)</span><br><span class="line">plt.figure(figsize=(10, 6))</span><br><span class="line">plt.plot(time, data1, label=&#x27;Stock Price&#x27;)</span><br><span class="line">plt.plot(time, finalpredicted_stock_price, label=&#x27;Predicted Stock Price&#x27;)</span><br><span class="line">plt.title(&#x27;Stock Price Prediction&#x27;)</span><br><span class="line">plt.xlabel(&#x27;Time&#x27;, fontsize=12, verticalalignment=&#x27;top&#x27;)</span><br><span class="line">plt.ylabel(&#x27;Close&#x27;, fontsize=14, horizontalalignment=&#x27;center&#x27;)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>time = data[&#39;trade_date&#39;][-args.n_test:]</code><br>測試資料的時間軸，存放在 <code>time</code> 這個變數</p>
+</li>
+<li><p><code>data1 = close[-args.n_test:]</code><br>測試時間軸上的真實收盤價，存放在 <code>data1</code> 這個變數裡面</p>
+</li>
+<li><p><code>finalpredicted_stock_price = []</code><br>放預測股價的空字串</p>
+</li>
+<li><p><code>pred = close[-args.n_test-1]</code><br>一個 real number，是測試集最開始前一天的收盤價，也就是訓練集最後一天的收盤價。</p>
+</li>
+<li><pre><code>for i in range(args.n_test):
+    pred = close[-args.n_test-1+i]*(1+predictions[i])
+    finalpredicted_stock_price.append(pred)
+</code></pre>
+</li>
+</ul>
 
   </div>
   
@@ -2434,10 +2750,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateModified" datetime="2025-07-25T13:38:01+08:00">
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2025-07-26T14:01:16+08:00">
   <a class='notlink'>
     <i class="fa-solid fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新於：2025年7月25日</p>
+    <p>更新於：2025年7月26日</p>
   </a>
 </div>
 
@@ -2448,8 +2764,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   
   
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Mamba-Stock-prediction/" rel="nofollow"><i class="fa-solid fa-hashtag fa-fw" aria-hidden="true"></i><p>Mamba, Stock prediction</p></a></div>
-  <span hidden itemprop="keywords">Mamba, Stock prediction</span>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Mamba-Stock-prediction-MambaStock/" rel="nofollow"><i class="fa-solid fa-hashtag fa-fw" aria-hidden="true"></i><p>Mamba, Stock prediction, MambaStock</p></a></div>
+  <span hidden itemprop="keywords">Mamba, Stock prediction, MambaStock</span>
   
 
 
@@ -2532,13 +2848,13 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   
   <header>
     
-      <i class="fa-solid fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+      <i class="fa-solid fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目錄</span>
     
   </header>
 
 
   <div class='content'>
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MambaConfig"><span class="toc-text">MambaConfig</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mamba"><span class="toc-text">Mamba</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ResidualBlock"><span class="toc-text">ResidualBlock</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B5%90%E6%A7%8B%E7%B0%A1%E4%BB%8B"><span class="toc-text">結構簡介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B3%87%E6%96%99%E9%A0%90%E8%A6%BD"><span class="toc-text">資料預覽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mamba-py"><span class="toc-text">mamba.py</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MambaConfig"><span class="toc-text">MambaConfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mamba"><span class="toc-text">Mamba</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResidualBlock"><span class="toc-text">ResidualBlock</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#main-py"><span class="toc-text">main.py</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%83%E6%95%B8"><span class="toc-text">參數</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%9D%E9%9B%A2%E5%87%BD%E6%95%B8%E4%BB%A5%E5%8F%8A%E9%9A%A8%E6%A9%9F%E6%95%B8"><span class="toc-text">距離函數以及隨機數</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%BB%BA%E6%A7%8B"><span class="toc-text">模型建構</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A8%93%E7%B7%B4%E5%8F%83%E6%95%B8"><span class="toc-text">訓練參數</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B3%87%E6%96%99%E5%89%8D%E8%99%95%E7%90%86"><span class="toc-text">資料前處理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A8%93%E7%B7%B4%E8%B3%87%E6%96%99-%E6%B8%AC%E8%A9%A6%E8%B3%87%E6%96%99"><span class="toc-text">訓練資料 &#x2F; 測試資料</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A8%93%E7%B7%B4%E7%B5%90%E6%9E%9C%E5%91%88%E7%8F%BE"><span class="toc-text">訓練結果呈現</span></a></li></ol></li></ol>
   </div>
 </section>
 
@@ -2640,6 +2956,121 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 <!-- rightmenu要在darkmode之前（ToggleButton） darkmode要在comments之前（volantis.dark.push）-->
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "color-scheme";
+const rootElementDarkModeAttributeName = "color-scheme";
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+  getCustomDarkMode();
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+/**
+ * get target mode
+ */
+ const getCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  if(currentSetting=="dark"){
+    volantis.dark.mode="light";
+  }else{
+    volantis.dark.mode="dark";
+  }
+  // console.log(volantis.dark.mode)
+};
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+/**
+ * 暗黑模式触发器
+ */
+volantis.dark.toggle=()=>{
+  const mode = toggleCustomDarkMode();
+  applyCustomDarkModeSettings(mode);
+  // 使用 volantis.dark.push 方法传入volantis.dark.toggle回调函数 参见layout/_partial/scripts/global.ejs
+  volantis.dark.method.toggle.start();
+}
+/**
+ * bind event for toggle button
+ */
+
+function bindToggleButton() {
+  var btn= document.querySelectorAll("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn")
+  btn.forEach(function (e) {
+    volantis.dom.$(e).on('click',volantis.dark.toggle);
+  })
+}
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", ()=>{
+  volantis.requestAnimationFrame(bindToggleButton)
+});
+
+const darkModelListeners={
+  dark:(mediaQueryList )=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "dark";
+    }
+    volantis.dark.method.toggle.start();
+  },
+  light:(mediaQueryList)=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "light";
+    }
+    volantis.dark.method.toggle.start();
+  }
+}
+window.matchMedia('(prefers-color-scheme: dark)').addListener(darkModelListeners.dark)
+window.matchMedia('(prefers-color-scheme: light)').addListener(darkModelListeners.light)
+</script>
+
 
 
 
@@ -3038,7 +3469,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 </script>
 
 
-  <script type="application/ld+json">[{"@context":"https://schema.org.cn","@type":"Organization","name":"個人部落格","url":"https://CHINWEI-LU.github.io/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"https://schema.org.cn","@type":"Person","name":"CHINWEI-LU","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://CHINWEI-LU.github.io/","sameAs":["https://github.com/volantis-x"],"description":"CHINWEI-LU 的個人部落格"},{"@context":"https://schema.org.cn","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://CHINWEI-LU.github.io/","name":"個人部落格"}},{"@type":"ListItem","position":2,"item":{"@id":"https://CHINWEI-LU.github.io/categories/AI2025PJ/","name":"AI2025PJ"}},{"@type":"ListItem","position":3,"item":{"@id":"https://CHINWEI-LU.github.io/2025/07/25/MambaStock-程式解析/","name":"MambaStock 程式解析"}}]},{"@context":"https://schema.org.cn","@type":"WebSite","name":"個人部落格","url":"https://CHINWEI-LU.github.io/","keywords":"IT技術, Python, Django","description":"CHINWEI-LU 的個人部落格","author":{"@type":"Person","name":"CHINWEI-LU","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://CHINWEI-LU.github.io/","description":"CHINWEI-LU 的個人部落格"},"publisher":{"@type":"Organization","name":"個人部落格","url":"https://CHINWEI-LU.github.io/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://CHINWEI-LU.github.io?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"https://schema.org.cn","@type":"BlogPosting","headline":"MambaStock 程式解析","description":"CHINWEI-LU 的個人部落格","inLanguage":"zh-TW","mainEntityOfPage":{"@type":"WebPage","@id":"https://chinwei-lu.github.io/2025/07/25/MambaStock-%E7%A8%8B%E5%BC%8F%E8%A7%A3%E6%9E%90/"},"author":{"@type":"Person","name":"CHINWEI-LU","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://CHINWEI-LU.github.io/"},"publisher":{"@type":"Organization","name":"個人部落格","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://chinwei-lu.github.io/2025/07/25/MambaStock-%E7%A8%8B%E5%BC%8F%E8%A7%A3%E6%9E%90/","wordCount":0,"datePublished":"2025-07-25T05:23:26.000Z","dateModified":"2025-07-25T05:38:01.279Z","articleSection":"AI2025PJ","keywords":"Mamba, Stock prediction","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org.cn","@type":"Organization","name":"個人部落格","url":"https://CHINWEI-LU.github.io/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"https://schema.org.cn","@type":"Person","name":"CHINWEI-LU","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://CHINWEI-LU.github.io/","sameAs":["https://github.com/volantis-x"],"description":"CHINWEI-LU 的個人部落格"},{"@context":"https://schema.org.cn","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://CHINWEI-LU.github.io/","name":"個人部落格"}},{"@type":"ListItem","position":2,"item":{"@id":"https://CHINWEI-LU.github.io/categories/AI2025PJ/","name":"AI2025PJ"}},{"@type":"ListItem","position":3,"item":{"@id":"https://CHINWEI-LU.github.io/2025/07/25/MambaStock-程式解析/","name":"MambaStock 程式解析"}}]},{"@context":"https://schema.org.cn","@type":"WebSite","name":"個人部落格","url":"https://CHINWEI-LU.github.io/","keywords":"IT技術, Python, Django","description":"CHINWEI-LU 的個人部落格","author":{"@type":"Person","name":"CHINWEI-LU","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://CHINWEI-LU.github.io/","description":"CHINWEI-LU 的個人部落格"},"publisher":{"@type":"Organization","name":"個人部落格","url":"https://CHINWEI-LU.github.io/","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"potentialAction":{"@type":"SearchAction","name":"Site Search","target":{"@type":"EntryPoint","urlTemplate":"https://CHINWEI-LU.github.io?s={search_term_string}"},"query-input":"required name=search_term_string"}},{"@context":"https://schema.org.cn","@type":"BlogPosting","headline":"MambaStock 程式解析","description":"CHINWEI-LU 的個人部落格","inLanguage":"zh-TW","mainEntityOfPage":{"@type":"WebPage","@id":"https://chinwei-lu.github.io/2025/07/25/MambaStock-%E7%A8%8B%E5%BC%8F%E8%A7%A3%E6%9E%90/"},"author":{"@type":"Person","name":"CHINWEI-LU","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://CHINWEI-LU.github.io/"},"publisher":{"@type":"Organization","name":"個人部落格","logo":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://chinwei-lu.github.io/2025/07/25/MambaStock-%E7%A8%8B%E5%BC%8F%E8%A7%A3%E6%9E%90/","wordCount":0,"datePublished":"2025-07-25T05:23:26.000Z","dateModified":"2025-07-26T06:01:16.266Z","articleSection":"AI2025PJ","keywords":"Mamba, Stock prediction, MambaStock","image":{"@type":"ImageObject","url":"https://unpkg.com/volantis-static@0.0.1660614606622/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
 
 
 
